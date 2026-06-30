@@ -7,7 +7,9 @@ import GoogleButton from "../googlebtn.jsx";
 
 function Login() {
     const navigate = useNavigate();
+
     const [islogin, setislogin] = useState(true);
+
     const {
         backendURL,
         setisprevious,
@@ -15,179 +17,396 @@ function Login() {
         setislogged,
         islogged
     } = useContext(UserContext);
+
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
     const [confirmpassword, setconfirmpassword] = useState("");
+
+    // OTP
+    const [verifyotp, setverifyotp] = useState("");
+    const [otpsent, setotpsent] = useState(false);
+
     const [isloading, setisloading] = useState(false);
+
     const [showpass, setshowpass] = useState(false);
     const [showconfirmpass, setshowconfirmpass] = useState(false);
 
     useEffect(() => {
-        if (islogged) navigate("/");
-    }, [islogged]);
+        if (islogged) {
+            navigate("/");
+        }
+    }, [islogged, navigate]);
 
     function validateEmail(email) {
         const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailregex.test(email);
     }
 
-    const submit = (event) => {
+    async function sendOtp() {
+
+        if (name.trim() === "") {
+            toast.warn("Username must not be empty");
+            return;
+        }
+
+        if (email.trim() === "") {
+            toast.warn("Email must not be empty");
+            return;
+        }
+
+        if (!validateEmail(email.trim())) {
+            toast.warn("Invalid Email");
+            return;
+        }
+
+        if (password.length < 6) {
+            toast.warn("Password must contain at least 6 characters");
+            return;
+        }
+
+        if (password !== confirmpassword) {
+            toast.warn("Passwords don't match");
+            return;
+        }
+
+        setisloading(true);
+
+        try {
+
+            const response = await fetch(`${backendURL}/verifyEmail`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: name.trim(),
+                    email: email.trim()
+                })
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                toast.success(text);
+                setotpsent(true);
+            }
+            else {
+                toast.error(text);
+            }
+
+        }
+        catch (err) {
+            toast.error("Unable to send OTP");
+        }
+
+        setisloading(false);
+    }
+
+    const submit = async (event) => {
         event.preventDefault();
 
         if (!islogin) {
-            // Signup flow — direct register, no OTP
-            if (name.trim() === "") { toast.warn("Username must not be empty"); return; }
-            if (email.trim() === "") { toast.warn("Email must not be empty"); return; }
-            if (!validateEmail(email.trim())) { toast.warn("Invalid Email"); return; }
-            if (password.length < 6) { toast.warn("Password at least 6 characters"); return; }
-            if (password !== confirmpassword) { toast.warn("Passwords don't match"); return; }
+
+            if (name.trim() === "") {
+                toast.warn("Username must not be empty");
+                return;
+            }
+
+            if (email.trim() === "") {
+                toast.warn("Email must not be empty");
+                return;
+            }
+
+            if (!validateEmail(email.trim())) {
+                toast.warn("Invalid Email");
+                return;
+            }
+
+            if (password.length < 6) {
+                toast.warn("Password must contain at least 6 characters");
+                return;
+            }
+
+            if (password !== confirmpassword) {
+                toast.warn("Passwords don't match");
+                return;
+            }
+
+            if (!otpsent) {
+                toast.warn("Please send OTP first");
+                return;
+            }
+
+            if (verifyotp.trim() === "") {
+                toast.warn("Please enter OTP");
+                return;
+            }
 
             setisloading(true);
-            fetch(`${backendURL}/register`, {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username: name.trim(),
-                    email: email.trim(),
-                    password: password
-                })
-            })
-                .then(response => {
-                    if (response.ok) {
-                        toast.success("Account created successfully! Please login.");
-                        setname("");
-                        setemail("");
-                        setpassword("");
-                        setconfirmpassword("");
-                        setshowpass(false);
-                        setshowconfirmpass(false);
-                        setislogin(true);
-                        setisloading(false);
-                    } else if (response.status === 409) {
-                        toast.error("Email already registered");
-                        setisloading(false);
-                    } else {
-                        toast.error("Registration failed. Please try again.");
-                        setisloading(false);
-                    }
-                })
-                .catch(() => {
-                    toast.error("Network error. Please check your connection.");
-                    setisloading(false);
+
+            try {
+
+                const response = await fetch(`${backendURL}/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: name.trim(),
+                        email: email.trim(),
+                        password: password,
+                        verifyotp: verifyotp.trim()
+                    })
                 });
 
+                const text = await response.text();
+
+                if (response.ok) {
+
+                    toast.success(text);
+
+                    setname("");
+                    setemail("");
+                    setpassword("");
+                    setconfirmpassword("");
+                    setverifyotp("");
+
+                    setshowpass(false);
+                    setshowconfirmpass(false);
+
+                    setotpsent(false);
+                    setislogin(true);
+
+                } else {
+
+                    toast.error(text);
+
+                }
+
+            } catch (err) {
+
+                toast.error("Registration failed");
+
+            }
+
+            setisloading(false);
+
         } else {
-            // Login flow — unchanged
-            if (email.trim() === "") { toast.warn("Email must not be empty"); return; }
-            if (!validateEmail(email.trim())) { toast.warn("Invalid Email"); return; }
-            if (password.length < 6) { toast.warn("Password at least 6 characters"); return; }
+
+            if (email.trim() === "") {
+                toast.warn("Email must not be empty");
+                return;
+            }
+
+            if (!validateEmail(email.trim())) {
+                toast.warn("Invalid Email");
+                return;
+            }
+
+            if (password.length < 6) {
+                toast.warn("Password must contain at least 6 characters");
+                return;
+            }
 
             setisloading(true);
+
             fetch(`${backendURL}/login`, {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email.trim(), password: password }),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    password: password
+                }),
                 credentials: "include"
             })
                 .then(response => {
+
                     if (response.ok) {
+
+                        toast.success("Successfully logged in");
+
                         setemail("");
                         setpassword("");
                         setshowpass(false);
-                        setisloading(false);
-                        toast.success("Successfully logged in");
+
                         return response.json();
-                    } else {
-                        setisloading(false);
-                        toast.error("Invalid credentials");
-                        return null;
+
                     }
+
+                    toast.error("Invalid credentials");
+                    return null;
+
                 })
                 .then(data => {
-                    if (data != null) {
+
+                    if (data) {
+
+                        console.log(data);   // <-- add this
+
                         setislogged(true);
                         setusername(data.username);
                         setisprevious(data.isPrevious);
+
                         navigate("/");
+
                     }
+
                 })
                 .catch(() => {
+
                     toast.error("Login failed");
+
+                })
+                .finally(() => {
+
                     setisloading(false);
+
                 });
+
         }
+
     };
 
     function switchmth() {
-        setname(""); setemail(""); setpassword("");
-        setconfirmpassword(""); setshowpass(false); setshowconfirmpass(false);
+
+        setname("");
+        setemail("");
+        setpassword("");
+        setconfirmpassword("");
+        setverifyotp("");
+
+        setshowpass(false);
+        setshowconfirmpass(false);
+
+        setotpsent(false);
+
         setislogin(!islogin);
+
     }
 
     return (
         <div className={Styles.container}>
+
             <div className={Styles.nav}>
                 <h1>Resume Analyser</h1>
             </div>
+
             <div className={Styles.logincontainer}>
+
                 <h1>{islogin ? "Login" : "Signup"}</h1>
+
                 {!islogin &&
                     <input
                         className={Styles.logincontainerinput}
+                        type="text"
+                        maxLength={20}
+                        autoComplete="off"
+                        placeholder="Username"
+                        value={name}
                         onChange={(e) => setname(e.target.value)}
-                        type="text" name="username" maxLength={20}
-                        autoComplete="off" value={name} placeholder="Username"
                     />
                 }
+
                 <input
-                    type="email"
                     className={Styles.logincontainerinput}
+                    type="email"
+                    autoComplete="off"
+                    placeholder="Email"
+                    value={email}
                     onChange={(e) => setemail(e.target.value)}
-                    name="email" value={email} autoComplete="off" placeholder="Email"
                 />
+
                 <div className={Styles.passdiv}>
                     <input
                         type={showpass ? "text" : "password"}
+                        autoComplete="off"
+                        placeholder="Password"
+                        value={password}
                         onChange={(e) => setpassword(e.target.value)}
-                        name="password" value={password} autoComplete="off" placeholder="Password"
                     />
-                    <i className={`fa-solid ${showpass ? "fa-eye-slash" : "fa-eye"}`}
-                       onClick={() => setshowpass(!showpass)} />
+                    <i
+                        className={`fa-solid ${showpass ? "fa-eye-slash" : "fa-eye"}`}
+                        onClick={() => setshowpass(!showpass)}
+                    />
                 </div>
+
                 {!islogin &&
                     <div className={Styles.passdiv}>
                         <input
                             type={showconfirmpass ? "text" : "password"}
+                            autoComplete="off"
+                            placeholder="Confirm Password"
+                            value={confirmpassword}
                             onChange={(e) => setconfirmpassword(e.target.value)}
-                            name="confirmpassword" autoComplete="off"
-                            value={confirmpassword} placeholder="Confirm password"
                         />
-                        <i className={`fa-solid ${showconfirmpass ? "fa-eye-slash" : "fa-eye"}`}
-                           onClick={() => setshowconfirmpass(!showconfirmpass)} />
+                        <i
+                            className={`fa-solid ${showconfirmpass ? "fa-eye-slash" : "fa-eye"}`}
+                            onClick={() => setshowconfirmpass(!showconfirmpass)}
+                        />
                     </div>
                 }
+
+                {!islogin && otpsent &&
+                    <input
+                        className={Styles.logincontainerinput}
+                        type="text"
+                        maxLength={6}
+                        placeholder="Enter OTP"
+                        value={verifyotp}
+                        onChange={(e) => setverifyotp(e.target.value)}
+                    />
+                }
+
                 {islogin &&
                     <Link className={Styles.linkdis} to="/forgotpassword">
                         <p className={Styles.forgetpass}>Forgot password?</p>
                     </Link>
                 }
+
+                {!islogin && !otpsent &&
+                    <button
+                        className={Styles.logincontainerbutton}
+                        onClick={sendOtp}
+                        disabled={isloading}
+                    >
+                        {isloading ? "Sending OTP..." : "Send OTP"}
+                    </button>
+                }
+
                 <button
                     className={Styles.logincontainerbutton}
                     onClick={submit}
                     disabled={isloading}
                 >
-                    {isloading ? "Loading..." : islogin ? "Login" : "Signup"}
+                    {isloading
+                        ? "Loading..."
+                        : islogin
+                            ? "Login"
+                            : "Signup"}
                 </button>
+
                 <p>
-                    {islogin ? "Doesn't have an account? " : "Already have an account? "}
-                    <span className={Styles.logincontainerspan} onClick={switchmth}>
+                    {islogin
+                        ? "Doesn't have an account? "
+                        : "Already have an account? "}
+
+                    <span
+                        className={Styles.logincontainerspan}
+                        onClick={switchmth}
+                    >
                         {islogin ? "Signup" : "Login"}
                     </span>
                 </p>
+
                 <hr className={Styles.ghr} />
+
                 <GoogleButton />
+
             </div>
+
         </div>
     );
 }
