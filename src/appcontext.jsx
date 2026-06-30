@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { UserContext } from "./context/usercontext";
 
+console.log("AppContext loaded");
+
 function AppContext({ children }) {
     const backendURL =
         import.meta.env.VITE_API_URL + "/resumeAnalyser/entry/v1";
@@ -14,21 +16,42 @@ function AppContext({ children }) {
     const [isauthenticated, setisauthenticated] = useState(false);
 
     useEffect(() => {
-        fetch(serviceURL + "/isValid", {
+        console.log("useEffect running");
+        console.log("serviceURL =", serviceURL);
+
+        fetch(`${serviceURL}/isValid`, {
             method: "POST",
             credentials: "include",
         })
-            .then((res) => (res.ok ? res.json() : null))
+            .then((res) => {
+                console.log("Response status:", res.status);
+
+                if (res.ok) {
+                    return res.json();
+                }
+
+                return null;
+            })
             .then((data) => {
+                console.log("Response data:", data);
+
                 if (data) {
                     setusername(data.username);
                     setisprevious(data.isPrevious);
                     setislogged(true);
+
+                    console.log("User authenticated");
+                } else {
+                    console.log("User not logged in");
                 }
 
+                console.log("Setting isauthenticated = true");
                 setisauthenticated(true);
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error("Fetch error:", err);
+
+                console.log("Setting isauthenticated = true from catch");
                 setisauthenticated(true);
             });
     }, [serviceURL]);
