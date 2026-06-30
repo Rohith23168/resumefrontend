@@ -73,6 +73,77 @@
     z-index: 4;
 }
 
+.summaryCard{
+    background-color: #1a1a1ad5;
+    border-radius: 30px;
+    width: 90%;
+    margin: 15px 0px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.expBadge{
+    background: linear-gradient(to right, #0061ff, #60efffd1);
+    color: black;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.summaryText{
+    color: #e0e0e0;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.skillsRow{
+    display: flex;
+    width: 90%;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.skillsBox{
+    background-color: #1a1a1ad5;
+    border-radius: 30px;
+    padding: 18px 20px;
+    flex: 1;
+    min-width: 260px;
+}
+
+.skillsBox h2{
+    margin-bottom: 12px;
+    font-size: 17px;
+}
+
+.tagWrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tagGood{
+    background: linear-gradient(to right, #065f46, #10b981);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.tagMissing{
+    background: linear-gradient(to right, #991b1b, #ef4444);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
 .pros,.cons,.sug,.jobs{
 
     background-color:  #1a1a1ad5;
@@ -109,7 +180,7 @@
 .jobidiv{
     border: 1px solid rgba(255, 255, 255, 0.125);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
-                0 0 1px 1px rgba(255, 255, 255, 0.05);
+    0 0 1px 1px rgba(255, 255, 255, 0.05);
     margin: 24px 15px;
     border-radius: 15px;
     padding: 10px;
@@ -207,12 +278,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-   background:conic-gradient(transparent 40%,#60efffd1 ,#0061ff );
+    background:conic-gradient(transparent 40%,#60efffd1 ,#0061ff );
     width: 100%;
 }
 
 .loadanimation::after{
-   background:conic-gradient(transparent 30%,#60efffd1 ,#0061ff );
+    background:conic-gradient(transparent 30%,#60efffd1 ,#0061ff );
     filter: blur(10px);
 
 }
@@ -221,10 +292,10 @@
     margin: 15px;
     margin-top: 50px;
     background: linear-gradient(
-        to right,
-        #0061ff 0%,
-        #60efffd1 30%,
-        #0061ff 100%
+            to right,
+            #0061ff 0%,
+            #60efffd1 30%,
+            #0061ff 100%
     );
     -webkit-background-clip: text;
     color: transparent;
@@ -241,7 +312,7 @@
     }
 }
 
- .capstart {
+.capstart {
     position: absolute;
     height: 1.015rem;
     width: 1.015rem;
@@ -263,14 +334,14 @@
 }
 
 @keyframes spin{
- from{
-    transform: rotate(0deg);
+    from{
+        transform: rotate(0deg);
 
- }
- to{
-    transform: rotate(360deg);
+    }
+    to{
+        transform: rotate(360deg);
 
- }
+    }
 }
 
 @media screen and (max-width:539px) {
@@ -279,29 +350,33 @@
         width: 90%;
     }
     .sc1{
-    width: 60%;
-}
-.sc2{
-    width: 60%;
+        width: 60%;
+    }
+    .sc2{
+        width: 60%;
 
-}
+    }
 
-.pros,.cons,.sug,.jobs{
-    width:90%;
-}
+    .pros,.cons,.sug,.jobs{
+        width:90%;
+    }
+
+    .skillsRow{
+        width: 90%;
+    }
 }
 
 
 @media screen and (max-width:431px) {
 
     .loadanimation::after{
-    filter: blur(7px);
+        filter: blur(7px);
 
-}
+    }
 
-.loadblock{
-    filter:blur(1px)
-}
+    .loadblock{
+        filter:blur(1px)
+    }
 
 
     .nav h1 {

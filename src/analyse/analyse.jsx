@@ -8,6 +8,13 @@ function Analyse() {
     const navigate = useNavigate()
     const [score, setscore] = useState(0)
     const [atsscore, setatsscore] = useState(0)
+    const [summary, setsummary] = useState("")
+    const [experienceLevel, setexperienceLevel] = useState("")
+    const [skills, setskills] = useState([])
+    const [missingSkills, setmissingSkills] = useState([])
+    const [strengths, setstrengths] = useState([])
+    const [weaknesses, setweaknesses] = useState([])
+    const [interviewTips, setinterviewTips] = useState([])
     const [pros, setpros] = useState([])
     const [cons, setcons] = useState([])
     const [sug, setsug] = useState([])
@@ -23,19 +30,25 @@ function Analyse() {
                 if (response.ok) {
                     return response.json()
                 } else {
-                    // response not ok (404 no previous, 401 unauth, etc.)
                     return null
                 }
             })
             .then(data => {
                 document.getElementById("animate").style.display = "none"
                 if (data != null) {
-                    setscore(data.score)
-                    setatsscore(data.atsoptimizationscore)
-                    setpros(data.pros)
-                    setcons(data.cons)
-                    setsug(data.suggestions)
-                    setjobs(data.jobs)
+                    setscore(data.score ?? 0)
+                    setatsscore(data.atsoptimizationscore ?? 0)
+                    setsummary(data.summary ?? "")
+                    setexperienceLevel(data.experienceLevel ?? "")
+                    setskills(Array.isArray(data.skills) ? data.skills : [])
+                    setmissingSkills(Array.isArray(data.missingSkills) ? data.missingSkills : [])
+                    setstrengths(Array.isArray(data.strengths) ? data.strengths : [])
+                    setweaknesses(Array.isArray(data.weaknesses) ? data.weaknesses : [])
+                    setinterviewTips(Array.isArray(data.interviewTips) ? data.interviewTips : [])
+                    setpros(Array.isArray(data.pros) ? data.pros : [])
+                    setcons(Array.isArray(data.cons) ? data.cons : [])
+                    setsug(Array.isArray(data.suggestions) ? data.suggestions : [])
+                    setjobs(Array.isArray(data.jobs) ? data.jobs : [])
                     setstatus("done")
                 } else {
                     setstatus("error")
@@ -120,25 +133,89 @@ function Analyse() {
                         </div>
                     </div>
 
+                    {(summary || experienceLevel) &&
+                        <div className={Styles.summaryCard}>
+                            {experienceLevel &&
+                                <span className={Styles.expBadge}>{experienceLevel} level</span>
+                            }
+                            {summary && <p className={Styles.summaryText}>{summary}</p>}
+                        </div>
+                    }
+
+                    {(skills.length > 0 || missingSkills.length > 0) &&
+                        <div className={Styles.skillsRow}>
+                            {skills.length > 0 &&
+                                <div className={Styles.skillsBox}>
+                                    <h2>Skills Found</h2>
+                                    <div className={Styles.tagWrap}>
+                                        {skills.map((item, index) =>
+                                            <span className={Styles.tagGood} key={index}>{item}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            }
+                            {missingSkills.length > 0 &&
+                                <div className={Styles.skillsBox}>
+                                    <h2>Missing Skills</h2>
+                                    <div className={Styles.tagWrap}>
+                                        {missingSkills.map((item, index) =>
+                                            <span className={Styles.tagMissing} key={index}>{item}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
                     <div className={Styles.rev}>
-                        <div className={Styles.pros}>
-                            <h2>Strengths</h2>
-                            <ul>
-                                {pros.map((item, index) => <li key={index}>{item}</li>)}
-                            </ul>
-                        </div>
-                        <div className={Styles.cons}>
-                            <h2>Improvements</h2>
-                            <ul>
-                                {cons.map((item, index) => <li key={index}>{item}</li>)}
-                            </ul>
-                        </div>
-                        <div className={Styles.sug}>
-                            <h2>Tips to enhance</h2>
-                            <ul>
-                                {sug.map((item, index) => <li key={index}>{item}</li>)}
-                            </ul>
-                        </div>
+                        {strengths.length > 0 &&
+                            <div className={Styles.pros}>
+                                <h2>Strengths</h2>
+                                <ul>
+                                    {strengths.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
+                        {weaknesses.length > 0 &&
+                            <div className={Styles.cons}>
+                                <h2>Weaknesses</h2>
+                                <ul>
+                                    {weaknesses.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
+                        {pros.length > 0 &&
+                            <div className={Styles.pros}>
+                                <h2>Pros</h2>
+                                <ul>
+                                    {pros.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
+                        {cons.length > 0 &&
+                            <div className={Styles.cons}>
+                                <h2>Cons</h2>
+                                <ul>
+                                    {cons.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
+                        {sug.length > 0 &&
+                            <div className={Styles.sug}>
+                                <h2>Tips to enhance</h2>
+                                <ul>
+                                    {sug.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
+                        {interviewTips.length > 0 &&
+                            <div className={Styles.sug}>
+                                <h2>Interview Preparation</h2>
+                                <ul>
+                                    {interviewTips.map((item, index) => <li key={index}>{item}</li>)}
+                                </ul>
+                            </div>
+                        }
                         {jobs.length > 0 &&
                             <div className={Styles.jobs}>
                                 <h2>Suggested Jobs</h2>
