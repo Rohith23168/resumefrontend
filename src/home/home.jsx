@@ -33,7 +33,6 @@ function Home() {
         return () => window.removeEventListener("click", func);
     }, []);
 
-    // FIX: missing function
     const toggle = () => {
         setshow(!isshow);
     };
@@ -71,7 +70,6 @@ function Home() {
         }
     };
 
-    // FIX: missing functions (placeholders to remove errors)
     const confirmagain = () => {
         document.getElementById("confirmdivdel").style.display = "flex";
     };
@@ -82,6 +80,7 @@ function Home() {
 
     const delaccount = () => {
         setdelloading(true);
+
         fetch(`${serviceURL}/delete`, {
             method: "DELETE",
             headers: {
@@ -90,7 +89,7 @@ function Home() {
         })
             .then((res) => {
                 if (res.ok) {
-                    localStorage.removeItem("token");   // <-- add this
+                    localStorage.removeItem("token");
                     toast.success("Account deleted");
                     setusername("");
                     setislogged(false);

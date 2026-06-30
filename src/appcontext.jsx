@@ -16,44 +16,29 @@ function AppContext({ children }) {
     const [isauthenticated, setisauthenticated] = useState(false);
 
     useEffect(() => {
-        console.log("useEffect running");
-        console.log("serviceURL =", serviceURL);
+        const params = new URLSearchParams(window.location.search);
+        const urlToken = params.get("token");
+        if (urlToken) {
+            localStorage.setItem("token", urlToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
         fetch(`${serviceURL}/isValid`, {
             method: "POST",
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
         })
-            .then((res) => {
-                console.log("Response status:", res.status);
-
-                if (res.ok) {
-                    return res.json();
-                }
-
-                return null;
-            })
+            .then((res) => res.ok ? res.json() : null)
             .then((data) => {
-                console.log("Response data:", data);
-
                 if (data) {
                     setusername(data.username);
                     setisprevious(data.isPrevious);
                     setislogged(true);
-
-                    console.log("User authenticated");
-                } else {
-                    console.log("User not logged in");
                 }
-
-                console.log("Setting isauthenticated = true");
                 setisauthenticated(true);
             })
-            .catch((err) => {
-                console.error("Fetch error:", err);
-
-                console.log("Setting isauthenticated = true from catch");
-                setisauthenticated(true);
-            });
+            .catch(() => setisauthenticated(true));
     }, [serviceURL]);
 
     return (

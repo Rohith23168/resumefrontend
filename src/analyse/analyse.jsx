@@ -26,9 +26,7 @@ function Analyse() {
         document.getElementById("animate").style.display = "flex"
 
         fetch(`${serviceURL}/lastReport`, {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
+            headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
         })
             .then(data => {
                 document.getElementById("animate").style.display = "none"

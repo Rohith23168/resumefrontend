@@ -96,7 +96,7 @@ function Login() {
             }
 
         }
-        catch (err) {
+        catch {
             toast.error("Unable to send OTP");
         }
 
@@ -184,10 +184,8 @@ function Login() {
 
                 }
 
-            } catch (err) {
-
+            } catch {
                 toast.error("Registration failed");
-
             }
 
             setisloading(false);
@@ -213,60 +211,23 @@ function Login() {
 
             fetch(`${backendURL}/login`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email.trim(),
-                    password: password
-                }),
-                credentials: "include"
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email.trim(), password: password })
             })
-                .then(response => {
-
-                    if (response.ok) {
-
-                        toast.success("Successfully logged in");
-
-                        setemail("");
-                        setpassword("");
-                        setshowpass(false);
-
-                        return response.json();
-
-                    }
-
-                    toast.error("Invalid credentials");
-                    return null;
-
-                })
+                .then(response => response.ok ? response.json() : null)
                 .then(data => {
-
                     if (data) {
-
-                        console.log(data);
-
-                        localStorage.setItem("token", data.token);   // <-- add this line
-
+                        localStorage.setItem("token", data.token);
                         setislogged(true);
                         setusername(data.username);
                         setisprevious(data.isPrevious);
-
                         navigate("/");
-
+                    } else {
+                        toast.error("Invalid credentials");
                     }
-
                 })
-                .catch(() => {
-
-                    toast.error("Login failed");
-
-                })
-                .finally(() => {
-
-                    setisloading(false);
-
-                });
+                .catch(() => toast.error("Login failed"))
+                .finally(() => setisloading(false));
 
         }
 

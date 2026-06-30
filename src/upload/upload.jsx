@@ -48,11 +48,10 @@ function Uploadpage() {
             return;
         }
         document.getElementById("animate").style.display = "flex";
-        fetch(`${serviceURL}/isValid`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            },
+        fetch(`${serviceURL}/extract`, {
+            method: "post",
+            body: formdata,
+            headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
         }).then(response => {
             if (response.ok) {
                 document.getElementById("upform").reset()
