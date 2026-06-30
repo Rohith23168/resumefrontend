@@ -244,7 +244,9 @@ function Login() {
 
                     if (data) {
 
-                        console.log(data);   // <-- add this
+                        console.log(data);
+
+                        localStorage.setItem("token", data.token);   // <-- add this line
 
                         setislogged(true);
                         setusername(data.username);

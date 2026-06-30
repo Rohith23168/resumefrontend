@@ -48,7 +48,12 @@ function Uploadpage() {
             return;
         }
         document.getElementById("animate").style.display = "flex";
-        fetch(`${serviceURL}/extract`, { method: "post", body: formdata, credentials: "include" }).then(response => {
+        fetch(`${serviceURL}/isValid`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+        }).then(response => {
             if (response.ok) {
                 document.getElementById("upform").reset()
                 document.getElementById("animate").style.display = "none";

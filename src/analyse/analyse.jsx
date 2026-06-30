@@ -25,14 +25,11 @@ function Analyse() {
     useEffect(() => {
         document.getElementById("animate").style.display = "flex"
 
-        fetch(`${serviceURL}/lastReport`, { credentials: "include" })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    return null
-                }
-            })
+        fetch(`${serviceURL}/lastReport`, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        })
             .then(data => {
                 document.getElementById("animate").style.display = "none"
                 if (data != null) {

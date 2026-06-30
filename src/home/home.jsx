@@ -43,10 +43,13 @@ function Home() {
 
         fetch(`${serviceURL}/logout`, {
             method: "POST",
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
         })
             .then((response) => {
                 if (response.ok) {
+                    localStorage.removeItem("token");
                     setusername("");
                     setislogged(false);
                     setisprevious(false);
@@ -79,13 +82,15 @@ function Home() {
 
     const delaccount = () => {
         setdelloading(true);
-
         fetch(`${serviceURL}/delete`, {
             method: "DELETE",
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
         })
             .then((res) => {
                 if (res.ok) {
+                    localStorage.removeItem("token");   // <-- add this
                     toast.success("Account deleted");
                     setusername("");
                     setislogged(false);
