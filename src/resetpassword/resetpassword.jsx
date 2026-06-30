@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react"
 import Styles from "./resetpassword.module.css"
 import { useNavigate } from "react-router-dom"
-import { usercontext } from "../appcontext"
+import { UserContext } from "../context/usercontext"
 import { toast } from "react-toastify"
 
 function Forgotpassword() {
@@ -13,7 +13,7 @@ function Forgotpassword() {
     const [isloading, setisloading] = useState(false)
     const [isemailpresent, setisemailpresent] = useState(false)
     const [isemailverified, setisemailverified] = useState(false)
-    const { backendURL, islogged } = useContext(usercontext)
+    const { backendURL, islogged } = useContext(UserContext)
     const [showpass, setshowpass] = useState(false)
     const [showconfirmpass, setshowconfirmpass] = useState(false)
 

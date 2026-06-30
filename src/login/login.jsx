@@ -1,14 +1,14 @@
 import { useContext, useState, useEffect } from "react";
 import Styles from "./login.module.css";
 import { toast } from "react-toastify";
-import { usercontext } from "../appcontext";
+import { UserContext } from "../context/usercontext";
 import { useNavigate, Link } from "react-router-dom";
 import GoogleButton from "../googlebtn.jsx";
 
 function Login() {
     const navigate = useNavigate();
     const [islogin, setislogin] = useState(true);
-    const { backendURL, setisprevious, setusername, setislogged, islogged } = useContext(usercontext);
+    const { backendURL, setisprevious, setusername, setislogged, islogged } = useContext(UserContext);
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");

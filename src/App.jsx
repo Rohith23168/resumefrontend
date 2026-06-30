@@ -4,7 +4,7 @@ import "./App.css"
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext } from "react";
-import { usercontext } from "./appcontext.jsx";
+import { UserContext } from "./context/usercontext";
 import Forgotpassword from "./resetpassword/resetpassword.jsx";
 import Uploadpage from "./upload/upload.jsx";
 import Analyse from "./analyse/analyse.jsx";
@@ -12,7 +12,7 @@ import Styles from "./loadstyle.module.css"
 
 function App() {
 
-  const { isauthenticated } = useContext(usercontext)
+  const { isauthenticated } = useContext(UserContext)
   return (isauthenticated ?
     <>
       <ToastContainer theme="dark" stacked autoClose={1500} />

@@ -1,6 +1,6 @@
 import Styles from "./home.module.css";
 import { useContext, useEffect, useState } from "react";
-import { usercontext } from "../appcontext";
+import { UserContext } from "../context/usercontext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -15,7 +15,7 @@ function Home() {
         setusername,
         setislogged,
         setisprevious,
-    } = useContext(usercontext);
+    } = useContext(UserContext);
 
     const [isshow, setshow] = useState(false);
     const [isloading, setisloading] = useState(false);

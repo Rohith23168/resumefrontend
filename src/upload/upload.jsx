@@ -1,12 +1,12 @@
 import { toast } from "react-toastify"
 import Styles from "./upload.module.css"
 import { useContext, useState } from "react"
-import { usercontext } from "../appcontext";
+import { UserContext } from "../context/usercontext";
 import { useNavigate } from "react-router-dom";
 function Uploadpage() {
 
 
-    const { serviceURL } = useContext(usercontext)
+    const { serviceURL } = useContext(UserContext)
     const navigate=useNavigate()
     const validate = () => {
         var inp = document.getElementById("resume")

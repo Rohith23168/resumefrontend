@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import Styles from "./analyse.module.css"
 import { Heat } from "@alptugidin/react-circular-progress-bar"
-import { usercontext } from "../appcontext"
+import { UserContext } from "../context/usercontext"
 import { useNavigate } from "react-router-dom"
 
 function Analyse() {
@@ -12,7 +12,7 @@ function Analyse() {
     const [cons, setcons] = useState([])
     const [sug, setsug] = useState([])
     const [jobs, setjobs] = useState([])
-    const { serviceURL } = useContext(usercontext)
+    const { serviceURL } = useContext(UserContext)
     const [status, setstatus] = useState("loading") // "loading" | "done" | "error"
 
     useEffect(() => {
