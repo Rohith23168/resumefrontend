@@ -1,6 +1,6 @@
 import { toast } from "react-toastify"
 import Styles from "./upload.module.css"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { UserContext } from "../context/usercontext";
 import { useNavigate } from "react-router-dom";
 function Uploadpage() {
@@ -9,8 +9,8 @@ function Uploadpage() {
     const { serviceURL } = useContext(UserContext)
     const navigate=useNavigate()
     const validate = () => {
-        var inp = document.getElementById("resume")
-        var file = inp.files[0]
+        const inp = document.getElementById("resume")
+        const file = inp.files[0]
         if (!['application/pdf',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type)) {
@@ -24,7 +24,7 @@ function Uploadpage() {
             document.getElementById("indication").textContent = "No file uploaded"
         }
         else {
-            var str = file.name;
+            const str = file.name;
             if (str.length <= 20) {
                 document.getElementById("indication").textContent = str
             }
@@ -37,7 +37,7 @@ function Uploadpage() {
 
     const analysedoc = (event) => {
         event.preventDefault()
-        var uploadform = document.getElementById("upform")
+        const uploadform = document.getElementById("upform")
         var formdata = new FormData(uploadform)
         if (formdata.get("roles").trim() === "") {
             toast.warn("Role must not be empty")
@@ -63,8 +63,8 @@ function Uploadpage() {
 
             }
         })
-            .catch(error => {
-                toast.error("Nerwork error")
+            .catch(() => {
+                toast.error("Network error")
                 document.getElementById("animate").style.display = "none";
             })
     }

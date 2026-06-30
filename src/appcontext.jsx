@@ -8,10 +8,10 @@ function AppContext({ children }) {
     const serviceURL =
         import.meta.env.VITE_API_URL + "/resumeAnalyserCore/service/v1";
 
-    const [isLogged, setIsLogged] = useState(false);
-    const [isPrevious, setIsPrevious] = useState(false);
-    const [username, setUsername] = useState("");
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [islogged, setislogged] = useState(false);
+    const [isprevious, setisprevious] = useState(false);
+    const [username, setusername] = useState("");
+    const [isauthenticated, setisauthenticated] = useState(false);
 
     useEffect(() => {
         fetch(serviceURL + "/isValid", {
@@ -21,27 +21,30 @@ function AppContext({ children }) {
             .then((res) => (res.ok ? res.json() : null))
             .then((data) => {
                 if (data) {
-                    setUsername(data.username);
-                    setIsPrevious(data.isPrevious);
-                    setIsLogged(true);
+                    setusername(data.username);
+                    setisprevious(data.isPrevious);
+                    setislogged(true);
                 }
-                setIsAuthenticated(true);
+
+                setisauthenticated(true);
             })
-            .catch(() => setIsAuthenticated(true));
+            .catch(() => {
+                setisauthenticated(true);
+            });
     }, [serviceURL]);
 
     return (
         <UserContext.Provider
             value={{
-                isLogged,
-                setIsLogged,
-                isPrevious,
-                setIsPrevious,
+                islogged,
+                setislogged,
+                isprevious,
+                setisprevious,
                 username,
-                setUsername,
+                setusername,
                 backendURL,
                 serviceURL,
-                isAuthenticated,
+                isauthenticated,
             }}
         >
             {children}

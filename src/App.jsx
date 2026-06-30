@@ -12,7 +12,8 @@ import Styles from "./loadstyle.module.css"
 
 function App() {
 
-  const { isauthenticated } = useContext(UserContext)
+  const { isauthenticated } = useContext(UserContext);
+
   return (isauthenticated ?
     <>
       <ToastContainer theme="dark" stacked autoClose={1500} />

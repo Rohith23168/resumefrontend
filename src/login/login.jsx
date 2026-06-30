@@ -8,7 +8,13 @@ import GoogleButton from "../googlebtn.jsx";
 function Login() {
     const navigate = useNavigate();
     const [islogin, setislogin] = useState(true);
-    const { backendURL, setisprevious, setusername, setislogged, islogged } = useContext(UserContext);
+    const {
+        backendURL,
+        setisprevious,
+        setusername,
+        setislogged,
+        islogged
+    } = useContext(UserContext);
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");

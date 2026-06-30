@@ -21,19 +21,19 @@ function Forgotpassword() {
         if (islogged) {
             navigate("/")
         }
-    }, [islogged])
+    }, [islogged, navigate])
 
     const handleInput = (index, event) => {
-        if (index < 5 && event.target.value != "" && event.target.value.replace(/\D/, "") != "") {
+        if (index < 5 && event.target.value.replace(/\D/, "") !== "" && event.target.value.replace(/\D/, "") != "") {
             document.getElementById(index + 1).focus()
         }
         if (event.target.value.replace(/\D/, "") != "") {
-            var tem = [...otp]
+            let tem = [...otp]
             tem[index] = event.target.value
             setotp(tem)
 
         }
-        if (event.target.value.replace(/\D/, "") == "") {
+        if (event.target.value.replace(/\D/, "") === "") {
             event.target.value = ""
         }
 
@@ -45,7 +45,7 @@ function Forgotpassword() {
                 document.getElementById(index - 1).focus()
                 event.preventDefault()
             }
-            var tem = [...otp]
+            let tem = [...otp]
             tem[index] = ""
             event.target.value = ""
             setotp(tem)
@@ -87,7 +87,7 @@ function Forgotpassword() {
                     setisloading(false)
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 toast.error("Verification failed")
                 setisloading(false)
             })
@@ -97,7 +97,7 @@ function Forgotpassword() {
 
 
     const verifyprocess = () => {
-        var enteredOtp = ""
+        let enteredOtp = ""
         otp.forEach((i) => enteredOtp += i)
         console.log(enteredOtp)
         if (enteredOtp.length < 6) {
@@ -125,7 +125,7 @@ function Forgotpassword() {
 
                 }
             })
-            .catch(error => { toast.error("Verification failed"); setisloading(false) })
+            .catch(() => { toast.error("Verification failed"); setisloading(false) })
 
 
     }
@@ -134,7 +134,7 @@ function Forgotpassword() {
 
 
     const resetpasswordsent = () => {
-        var enteredOtp = ""
+        let enteredOtp = ""
         otp.forEach((i) => enteredOtp += i)
         if (newpassword.length < 6) {
             toast.warn("Password atLeast have 6 characters")
@@ -166,7 +166,7 @@ function Forgotpassword() {
                     setisloading(false)
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 toast.error("Resetting failed")
                 setisloading(false)
             })
