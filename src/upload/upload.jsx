@@ -55,12 +55,22 @@ function Uploadpage() {
                 document.getElementById("indication").textContent = "No file uploaded"
                 navigate("/analysereport")
             }
-            else {
+            else if (response.status === 401) {
+                document.getElementById("animate").style.display = "none";
+                toast.error("Your session has expired. Please log in again.")
+                navigate("/login")
+            }
+            else if (response.status === 406) {
                 document.getElementById("upform").reset()
-                toast.error("Irrevelant resume or role")
+                toast.error("This resume doesn't appear relevant to the role entered. Please check both and try again.")
                 document.getElementById("animate").style.display = "none";
                 document.getElementById("indication").textContent = "No file uploaded"
-
+            }
+            else {
+                document.getElementById("upform").reset()
+                toast.error("Something went wrong while analysing your resume. Please try again.")
+                document.getElementById("animate").style.display = "none";
+                document.getElementById("indication").textContent = "No file uploaded"
             }
         })
             .catch(() => {
