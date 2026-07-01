@@ -28,8 +28,12 @@ function Analyse() {
         fetch(`${serviceURL}/lastReport`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
         })
-            .then(data => {
+            .then(res => {
                 document.getElementById("animate").style.display = "none"
+                if (res.ok) return res.json()
+                setstatus("error")
+            })
+            .then(data => {
                 if (data != null) {
                     setscore(data.score ?? 0)
                     setatsscore(data.atsoptimizationscore ?? 0)
